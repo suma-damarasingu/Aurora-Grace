@@ -46,8 +46,8 @@ const seedDatabase = async () => {
     // 1. Seed ONE Admin user (as strictly specified: "only ONE admin exists (seeded in DB)")
     console.log('👤 Seeding Admin account...');
     const adminUser = await User.create({
-      name: 'Glamora Admin',
-      email: 'admin@glamora.com',
+      name: 'Aurora Grace Admin',
+      email: 'admin@auroragrace.com',
       phone: '+1 555-0199',
       password: 'AdminPassword123!',
       role: 'admin',
@@ -59,7 +59,7 @@ const seedDatabase = async () => {
     console.log('👩 Seeding Demo Customer account...');
     const demoCustomer = await User.create({
       name: 'Sophia Miller',
-      email: 'customer@glamora.com',
+      email: 'customer@auroragrace.com',
       phone: '+1 555-0248',
       password: 'CustomerPassword123!',
       role: 'customer',
@@ -340,15 +340,15 @@ const seedDatabase = async () => {
     await Booking.insertMany(bookingsToSeed);
 
     console.log('\n==================================================');
-    console.log('🎉 GLAMORA DATABASE SEEDING COMPLETED SUCCESSFULLY!');
+    console.log('🎉 AURORA GRACE DATABASE SEEDING COMPLETED SUCCESSFULLY!');
     console.log('==================================================');
     console.log('👑 Admin Account:');
-    console.log('   Email:    admin@glamora.com');
+    console.log('   Email:    admin@auroragrace.com');
     console.log('   Password: AdminPassword123!');
     console.log('   Role:     admin');
     console.log('--------------------------------------------------');
     console.log('👩 Customer Account:');
-    console.log('   Email:    customer@glamora.com');
+    console.log('   Email:    customer@auroragrace.com');
     console.log('   Password: CustomerPassword123!');
     console.log('   Role:     customer');
     console.log('--------------------------------------------------');

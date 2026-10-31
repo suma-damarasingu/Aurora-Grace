@@ -10,7 +10,7 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const User = require('../models/User');
 
-// Helper to parse CLI arguments (e.g. --email=myadmin@glamora.com --password=secret)
+// Helper to parse CLI arguments (e.g. --email=myadmin@auroragrace.com --password=secret)
 const getArg = (name, fallback) => {
   const prefix = `--${name}=`;
   const arg = process.argv.find((a) => a.startsWith(prefix));
@@ -20,16 +20,16 @@ const getArg = (name, fallback) => {
 
 const seedSingleAdmin = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/glamora';
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auroragrace';
     console.log('🔄 Connecting to MongoDB for Single-Admin configuration...');
     
     await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 8000 });
     console.log('✅ Connected to MongoDB successfully.');
 
     // Desired Admin Credentials
-    const adminEmail = (getArg('email', process.env.ADMIN_EMAIL) || 'admin@glamora.com').toLowerCase().trim();
+    const adminEmail = (getArg('email', process.env.ADMIN_EMAIL) || 'admin@auroragrace.com').toLowerCase().trim();
     const adminPassword = getArg('password', process.env.ADMIN_PASSWORD) || 'AdminPassword123!';
-    const adminName = getArg('name', process.env.ADMIN_NAME) || 'Glamora Admin';
+    const adminName = getArg('name', process.env.ADMIN_NAME) || 'Aurora Grace Admin';
     const adminPhone = getArg('phone', process.env.ADMIN_PHONE) || '+1 555-0199';
 
     // 1. Check for existing admin in MongoDB
@@ -94,7 +94,7 @@ const seedSingleAdmin = async () => {
     }
 
     console.log('\n======================================================');
-    console.log('👑 GLAMORA SINGLE ADMIN CONFIGURED SUCCESSFULLY');
+    console.log('👑 AURORA GRACE SINGLE ADMIN CONFIGURED SUCCESSFULLY');
     console.log('======================================================');
     console.log(`   Name:     ${testAdmin.name}`);
     console.log(`   Email:    ${testAdmin.email}`);

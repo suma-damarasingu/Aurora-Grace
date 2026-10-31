@@ -18,10 +18,10 @@ if (isCloudinaryConfigured) {
 /**
  * Uploads a file buffer or path to Cloudinary, or falls back to local static URL.
  */
-const uploadToCloudinary = async (filePathOrBuffer, folder = 'glamora') => {
+const uploadToCloudinary = async (filePathOrBuffer, folder = 'auroragrace') => {
   if (isCloudinaryConfigured) {
     const result = await cloudinary.uploader.upload(filePathOrBuffer, {
-      folder: `glamora/${folder}`,
+      folder: `auroragrace/${folder}`,
       resource_type: 'auto'
     });
     return result.secure_url;

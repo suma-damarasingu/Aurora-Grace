@@ -67,7 +67,7 @@ const HomePage = () => {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
                 Embrace Your Radiance with{' '}
                 <span className="bg-gradient-to-r from-rose-600 via-rose-500 to-pink-500 bg-clip-text text-transparent">
-                  Glamora
+                  Aurora Grace
                 </span>
               </h1>
 
@@ -154,7 +154,7 @@ const HomePage = () => {
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white aspect-[4/3] lg:aspect-[4/3]">
                   <img
                     src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=80"
-                    alt="Glamora Salon Studio"
+                    alt="Aurora Grace Salon Studio"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>

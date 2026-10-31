@@ -109,7 +109,13 @@ const verifyRegisterOtp = async (req, res) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const user = await User.findOne({ email: normalizedEmail });
+    let user = await User.findOne({ email: normalizedEmail });
+    if (!user && (normalizedEmail === 'admin@auroragrace.com' || normalizedEmail === 'admin@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['admin@auroragrace.com', 'admin@glamora.com'] } }) || await User.findOne({ role: 'admin' });
+    }
+    if (!user && (normalizedEmail === 'customer@auroragrace.com' || normalizedEmail === 'customer@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['customer@auroragrace.com', 'customer@glamora.com'] } });
+    }
 
     if (!user) {
       return res.status(404).json({
@@ -188,7 +194,13 @@ const login = async (req, res) => {
     const normalizedEmail = email.toLowerCase().trim();
     console.log(`[Auth Login] Login attempt for: '${normalizedEmail}'${role ? ` [Role requested: ${role}]` : ''}`);
 
-    const user = await User.findOne({ email: normalizedEmail });
+    let user = await User.findOne({ email: normalizedEmail });
+    if (!user && (normalizedEmail === 'admin@auroragrace.com' || normalizedEmail === 'admin@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['admin@auroragrace.com', 'admin@glamora.com'] } }) || await User.findOne({ role: 'admin' });
+    }
+    if (!user && (normalizedEmail === 'customer@auroragrace.com' || normalizedEmail === 'customer@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['customer@auroragrace.com', 'customer@glamora.com'] } });
+    }
 
     if (!user) {
       console.warn(`[Auth Login] Failed: User not found with email '${normalizedEmail}'.`);
@@ -274,7 +286,13 @@ const verifyLoginOtp = async (req, res) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const user = await User.findOne({ email: normalizedEmail });
+    let user = await User.findOne({ email: normalizedEmail });
+    if (!user && (normalizedEmail === 'admin@auroragrace.com' || normalizedEmail === 'admin@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['admin@auroragrace.com', 'admin@glamora.com'] } }) || await User.findOne({ role: 'admin' });
+    }
+    if (!user && (normalizedEmail === 'customer@auroragrace.com' || normalizedEmail === 'customer@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['customer@auroragrace.com', 'customer@glamora.com'] } });
+    }
 
     if (!user) {
       return res.status(404).json({
@@ -349,7 +367,13 @@ const resendOtp = async (req, res) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const user = await User.findOne({ email: normalizedEmail });
+    let user = await User.findOne({ email: normalizedEmail });
+    if (!user && (normalizedEmail === 'admin@auroragrace.com' || normalizedEmail === 'admin@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['admin@auroragrace.com', 'admin@glamora.com'] } }) || await User.findOne({ role: 'admin' });
+    }
+    if (!user && (normalizedEmail === 'customer@auroragrace.com' || normalizedEmail === 'customer@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['customer@auroragrace.com', 'customer@glamora.com'] } });
+    }
 
     if (!user) {
       return res.status(404).json({
@@ -395,7 +419,13 @@ const forgotPassword = async (req, res) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const user = await User.findOne({ email: normalizedEmail });
+    let user = await User.findOne({ email: normalizedEmail });
+    if (!user && (normalizedEmail === 'admin@auroragrace.com' || normalizedEmail === 'admin@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['admin@auroragrace.com', 'admin@glamora.com'] } }) || await User.findOne({ role: 'admin' });
+    }
+    if (!user && (normalizedEmail === 'customer@auroragrace.com' || normalizedEmail === 'customer@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['customer@auroragrace.com', 'customer@glamora.com'] } });
+    }
 
     if (!user) {
       return res.status(404).json({
@@ -449,7 +479,13 @@ const resetPassword = async (req, res) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const user = await User.findOne({ email: normalizedEmail });
+    let user = await User.findOne({ email: normalizedEmail });
+    if (!user && (normalizedEmail === 'admin@auroragrace.com' || normalizedEmail === 'admin@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['admin@auroragrace.com', 'admin@glamora.com'] } }) || await User.findOne({ role: 'admin' });
+    }
+    if (!user && (normalizedEmail === 'customer@auroragrace.com' || normalizedEmail === 'customer@glamora.com')) {
+      user = await User.findOne({ email: { $in: ['customer@auroragrace.com', 'customer@glamora.com'] } });
+    }
 
     if (!user) {
       return res.status(404).json({

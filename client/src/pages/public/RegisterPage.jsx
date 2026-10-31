@@ -72,7 +72,7 @@ const RegisterPage = () => {
       setLoading(true);
       const res = await verifyRegisterOtp(formData.email, otp.trim());
       if (res.success) {
-        toast.success('Account created and verified! Welcome to Glamora ✨');
+        toast.success('Account created and verified! Welcome to Aurora Grace ✨');
         navigate('/dashboard');
       }
     } catch (error) {
@@ -104,7 +104,7 @@ const RegisterPage = () => {
             <Sparkles className="w-6 h-6" />
           </div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-            {step === 1 ? 'Create Glamora Account' : 'Verify Email Address'}
+            {step === 1 ? 'Create Aurora Grace Account' : 'Verify Email Address'}
           </h2>
           <p className="text-xs text-slate-500 mt-1">
             {step === 1

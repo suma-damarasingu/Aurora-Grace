@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import Sidebar from '../components/common/Sidebar';
+import NotificationBell from '../components/common/NotificationBell';
 import { Menu, Sparkles } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import CustomerOnly from '../components/auth/CustomerOnly';
@@ -61,6 +62,9 @@ const CustomerLayout = () => {
               </Link>
             </CustomerOnly>
 
+            {/* Notification Bell with Badge */}
+            <NotificationBell />
+
             {/* Top-Right Clickable Profile Section */}
             <Link
               to="/dashboard/settings"
@@ -82,7 +86,7 @@ const CustomerLayout = () => {
               </div>
               <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-rose-200 shrink-0 group-hover:ring-rose-400 transition-all">
                 <img
-                  src={user?.profilePic || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
+                  src={user?.profilePicture || user?.profilePic || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
                   alt={user?.name}
                   className="w-full h-full object-cover"
                 />

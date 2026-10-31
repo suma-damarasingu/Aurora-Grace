@@ -107,7 +107,7 @@ const getRecommendations = async (req, res) => {
       }
 
       if (recommendedServices.length > 0 && !userId) {
-        reason = 'Trending & Popular on Glamora';
+        reason = 'Trending & Popular on Aurora Grace';
       }
     }
 

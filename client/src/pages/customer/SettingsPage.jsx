@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
-import { User, Mail, Phone, Lock, Camera, Save, KeyRound, LogOut } from 'lucide-react';
+import { User, Mail, Phone, Lock, Camera, Save, KeyRound, LogOut, MapPin } from 'lucide-react';
 
 const SettingsPage = () => {
   const { user, updateProfile, changePassword, logout } = useAuth();
@@ -10,9 +10,20 @@ const SettingsPage = () => {
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [phone, setPhone] = useState(user?.phone || '');
+  const [location, setLocation] = useState(user?.location || '');
   const [profilePicFile, setProfilePicFile] = useState(null);
-  const [preview, setPreview] = useState(user?.profilePic || '');
+  const [preview, setPreview] = useState(user?.profilePicture || user?.profilePic || '');
   const [profileLoading, setProfileLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '');
+      setEmail(user.email || '');
+      setPhone(user.phone || '');
+      setLocation(user.location || '');
+      setPreview(user.profilePicture || user.profilePic || '');
+    }
+  }, [user]);
 
   // Password fields
   const [oldPassword, setOldPassword] = useState('');
@@ -36,6 +47,7 @@ const SettingsPage = () => {
       formData.append('name', name.trim());
       formData.append('email', email.trim());
       formData.append('phone', phone.trim());
+      formData.append('location', location.trim());
       if (profilePicFile) {
         formData.append('profilePic', profilePicFile);
       }
@@ -178,6 +190,22 @@ const SettingsPage = () => {
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-rose-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
                     />
                   </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Location / Address
+                </label>
+                <div className="relative">
+                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="e.g. Attili, West Godavari, Andhrapradesh"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-rose-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  />
                 </div>
               </div>
 

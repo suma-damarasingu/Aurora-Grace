@@ -21,6 +21,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const userRoutes = require('./routes/userRoutes');
 const recommendationRoutes = require('./routes/recommendationRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 // Import controllers for direct customer endpoints as requested in spec
 const { updateProfile, changePassword } = require('./controllers/authController');
@@ -31,7 +32,26 @@ const upload = require('./middleware/upload');
 const app = express();
 
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3000',
+  process.env.CLIENT_URL
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true); // Permissive for local development
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'x-admin-setup-key']
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -42,7 +62,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'online',
-    appName: 'Glamora API',
+    appName: 'Aurora Grace API',
     timestamp: new Date().toISOString()
   });
 });
@@ -57,6 +77,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Customer Direct Endpoints (spec exact path requirements)
 app.put('/api/profile', verifyToken, upload.single('profilePic'), updateProfile);
@@ -86,7 +107,7 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(PORT, () => {
-      console.log(`🌸 Glamora Backend Server running on port ${PORT}`);
+      console.log(`🌸 Aurora Grace Backend Server running on port ${PORT}`);
       console.log(`🔗 API Base: http://localhost:${PORT}/api`);
     });
   } catch (err) {

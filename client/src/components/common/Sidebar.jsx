@@ -56,7 +56,7 @@ const Sidebar = ({ role = 'customer' }) => {
           </div>
           <div>
             <h1 className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-rose-700 to-pink-600 bg-clip-text text-transparent">
-              GLAMORA
+              AURORA GRACE
             </h1>
             <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500">
               {isActualAdmin ? 'Admin Portal' : 'Client Studio'}
@@ -104,7 +104,7 @@ const Sidebar = ({ role = 'customer' }) => {
           title="Account Settings"
         >
           <img
-            src={user?.profilePic || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
+            src={user?.profilePicture || user?.profilePic || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
             alt={user?.name}
             className="w-10 h-10 rounded-full object-cover ring-2 ring-rose-200 group-hover:ring-rose-400 transition-all"
           />

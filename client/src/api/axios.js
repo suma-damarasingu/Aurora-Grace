@@ -10,7 +10,7 @@ const api = axios.create({
 // Interceptor to add Authorization Bearer token to every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('glamora_token');
+    const token = localStorage.getItem('auroragrace_token') || localStorage.getItem('glamora_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,6 +31,8 @@ api.interceptors.response.use(
         !window.location.pathname.includes('/login') &&
         !window.location.pathname.includes('/register')
       ) {
+        localStorage.removeItem('auroragrace_token');
+        localStorage.removeItem('auroragrace_user');
         localStorage.removeItem('glamora_token');
         localStorage.removeItem('glamora_user');
       }

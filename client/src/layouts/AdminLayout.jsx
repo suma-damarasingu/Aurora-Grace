@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import Sidebar from '../components/common/Sidebar';
+import NotificationBell from '../components/common/NotificationBell';
 import { Menu, ShieldAlert, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -55,6 +56,8 @@ const AdminLayout = () => {
           </div>
 
           <div className="flex items-center gap-4">
+            <NotificationBell />
+
             {/* Top-Right Clickable Admin Profile Section */}
             <Link
               to="/admin/settings"
@@ -76,7 +79,7 @@ const AdminLayout = () => {
               </div>
               <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-rose-300 shrink-0 group-hover:ring-rose-500 transition-all">
                 <img
-                  src={user?.profilePic || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80'}
+                  src={user?.profilePicture || user?.profilePic || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80'}
                   alt={user?.name}
                   className="w-full h-full object-cover"
                 />

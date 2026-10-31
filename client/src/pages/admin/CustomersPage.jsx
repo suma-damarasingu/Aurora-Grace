@@ -5,7 +5,7 @@ import Modal from '../../components/common/Modal';
 import EmptyState from '../../components/common/EmptyState';
 import { TableSkeleton } from '../../components/common/Skeleton';
 import toast from 'react-hot-toast';
-import { Users, Search, RefreshCw, Calendar, DollarSign, History } from 'lucide-react';
+import { Users, Search, RefreshCw, Calendar, DollarSign, History, MapPin } from 'lucide-react';
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -17,7 +17,7 @@ const CustomersPage = () => {
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/users');
+      const res = await api.get('/users?t=' + Date.now());
       if (res.data.success) {
         setCustomers(res.data.customers || []);
       }
@@ -42,7 +42,8 @@ const CustomersPage = () => {
     return (
       c.name?.toLowerCase().includes(term) ||
       c.email?.toLowerCase().includes(term) ||
-      c.phone?.includes(term)
+      c.phone?.includes(term) ||
+      c.location?.toLowerCase().includes(term)
     );
   });
 
@@ -111,7 +112,7 @@ const CustomersPage = () => {
                       <div className="flex items-center gap-3">
                         <img
                           src={
-                            c.profilePic ||
+                            c.profilePicture || c.profilePic ||
                             'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
                           }
                           alt={c.name}
@@ -130,6 +131,12 @@ const CustomersPage = () => {
                     <td className="py-4 px-4">
                       <p className="text-slate-800 font-medium">{c.email}</p>
                       <p className="text-[11px] text-slate-400 mt-0.5">{c.phone}</p>
+                      {c.location && (
+                        <p className="text-[11px] text-rose-600 font-medium mt-1 flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-rose-500 shrink-0" />
+                          <span className="truncate max-w-[150px]">{c.location}</span>
+                        </p>
+                      )}
                     </td>
 
                     {/* Joined */}
@@ -188,6 +195,12 @@ const CustomersPage = () => {
               <div>
                 <p className="font-bold text-slate-800">{selectedCustomer.email}</p>
                 <p className="text-slate-500">{selectedCustomer.phone}</p>
+                {selectedCustomer.location && (
+                  <p className="text-rose-600 font-medium mt-1 flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                    <span>{selectedCustomer.location}</span>
+                  </p>
+                )}
               </div>
               <div className="text-right">
                 <p className="text-slate-500 font-medium">Total Spent</p>

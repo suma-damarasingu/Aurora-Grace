@@ -187,7 +187,7 @@ const BookingPage = () => {
           Reserve Your Beauty Appointment
         </h1>
         <p className="text-xs text-slate-500 mt-1">
-          Select your customized treatment, pick your preferred timing, and secure your booking with Glamora.
+          Select your customized treatment, pick your preferred timing, and secure your booking with Aurora Grace.
         </p>
       </div>
 

@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import CustomerOnly from '../auth/CustomerOnly';
 import AdminOnly from '../auth/AdminOnly';
 import { Sparkles, Heart, Calendar, LogOut, Menu, X, ShieldAlert, Scissors } from 'lucide-react';
+import NotificationBell from './NotificationBell';
 
 const Navbar = () => {
   const { user, isAuthenticated, isAdmin, isCustomer, logout } = useAuth();
@@ -29,7 +30,7 @@ const Navbar = () => {
             </div>
             <div>
               <span className="font-extrabold text-2xl tracking-tight bg-gradient-to-r from-rose-700 via-rose-600 to-pink-600 bg-clip-text text-transparent">
-                GLAMORA
+                AURORA GRACE
               </span>
               <span className="block text-[10px] font-semibold tracking-widest uppercase text-rose-400">
                 Luxury Beauty Studio
@@ -119,13 +120,14 @@ const Navbar = () => {
           {/* Desktop Right Actions */}
           <div className="hidden md:flex items-center gap-4">
             {isAuthenticated ? (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <NotificationBell />
                 <Link
                   to={isAdmin ? '/admin/settings' : '/dashboard/settings'}
                   className="flex items-center gap-2.5 p-1.5 pr-3 rounded-full bg-rose-50 hover:bg-rose-100 transition-colors border border-rose-100"
                 >
                   <img
-                    src={user?.profilePic || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
+                    src={user?.profilePicture || user?.profilePic || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
                     alt={user?.name}
                     className="w-8 h-8 rounded-full object-cover ring-2 ring-white"
                   />
@@ -161,7 +163,8 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center md:hidden">
+          <div className="flex items-center gap-2 md:hidden">
+            {isAuthenticated && <NotificationBell />}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-xl text-slate-600 hover:text-rose-600 hover:bg-rose-50"

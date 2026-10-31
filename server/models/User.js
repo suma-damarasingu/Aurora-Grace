@@ -34,6 +34,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
     },
+    profilePicture: {
+      type: String,
+      default: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+    },
+    location: {
+      type: String,
+      default: '',
+      trim: true
+    },
     otp: {
       type: String,
       default: null

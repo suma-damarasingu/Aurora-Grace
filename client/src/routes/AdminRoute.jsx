@@ -6,9 +6,10 @@ const AdminRoute = () => {
   const { isAuthenticated, isAdmin, isLoading } = useAuth();
 
   // Instant fallback check with localStorage to prevent transit bounce
-  const token = localStorage.getItem('glamora_token');
-  const storedUser = localStorage.getItem('glamora_user')
-    ? JSON.parse(localStorage.getItem('glamora_user'))
+  const token = localStorage.getItem('auroragrace_token') || localStorage.getItem('glamora_token');
+  const rawUser = localStorage.getItem('auroragrace_user') || localStorage.getItem('glamora_user');
+  const storedUser = rawUser
+    ? JSON.parse(rawUser)
     : null;
 
   const authed = isAuthenticated || Boolean(token && storedUser);
@@ -18,7 +19,7 @@ const AdminRoute = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-rose-50/50">
         <div className="w-12 h-12 border-4 border-rose-200 border-t-rose-600 rounded-full animate-spin"></div>
-        <p className="mt-4 text-sm font-medium text-rose-800 tracking-wide">Loading Glamora...</p>
+        <p className="mt-4 text-sm font-medium text-rose-800 tracking-wide">Loading Aurora Grace...</p>
       </div>
     );
   }

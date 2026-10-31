@@ -25,11 +25,11 @@ if (isEmailConfigured) {
  * @param {string} type - 'Registration' | 'Login Verification' | 'Password Reset'
  */
 const sendOtpEmail = async (email, otp, type = 'Verification') => {
-  const subject = `Glamora - ${type} OTP: ${otp}`;
+  const subject = `Aurora Grace - ${type} OTP: ${otp}`;
   const htmlContent = `
     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 520px; margin: 0 auto; background-color: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #fce7f3; box-shadow: 0 4px 20px rgba(244, 63, 94, 0.08);">
       <div style="background: linear-gradient(135deg, #e11d48, #be123c, #fb7185); padding: 32px 24px; text-align: center; color: white;">
-        <h1 style="margin: 0; font-size: 28px; letter-spacing: 1px; font-weight: 700;">GLAMORA</h1>
+        <h1 style="margin: 0; font-size: 28px; letter-spacing: 1px; font-weight: 700;">AURORA GRACE</h1>
         <p style="margin: 6px 0 0; font-size: 14px; opacity: 0.9;">Luxury Beauty & Salon Experience</p>
       </div>
       <div style="padding: 32px 28px; color: #334155;">
@@ -47,13 +47,13 @@ const sendOtpEmail = async (email, otp, type = 'Verification') => {
         </p>
       </div>
       <div style="background-color: #fdf2f8; padding: 16px; text-align: center; font-size: 12px; color: #9d174d; border-top: 1px solid #fce7f3;">
-        © ${new Date().getFullYear()} Glamora Beauty Services. All rights reserved.
+        © ${new Date().getFullYear()} Aurora Grace Beauty Services. All rights reserved.
       </div>
     </div>
   `;
 
   console.log(`\n==================================================`);
-  console.log(`🌸 [GLAMORA OTP] To: ${email}`);
+  console.log(`🌸 [AURORA GRACE OTP] To: ${email}`);
   console.log(`🔑 Purpose: ${type}`);
   console.log(`👉 OTP Code: [ ${otp} ]`);
   console.log(`⏰ Valid for 10 minutes`);
@@ -62,7 +62,7 @@ const sendOtpEmail = async (email, otp, type = 'Verification') => {
   if (transporter) {
     try {
       await transporter.sendMail({
-        from: `"Glamora Beauty" <${process.env.EMAIL_USER}>`,
+        from: `"Aurora Grace Beauty" <${process.env.EMAIL_USER}>`,
         to: email,
         subject,
         html: htmlContent

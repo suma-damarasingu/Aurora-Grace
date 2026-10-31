@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'glamora_super_secret_jwt_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'auroragrace_super_secret_jwt_key_2026';
 
 /**
  * Middleware to authenticate requests using JWT

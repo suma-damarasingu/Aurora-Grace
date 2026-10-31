@@ -1,7 +1,7 @@
 {
-  "name": "glamora",
+  "name": "auroragrace",
   "version": "1.0.0",
-  "description": "Glamora - Luxury Beauty & Services Booking Platform",
+  "description": "Aurora Grace - Luxury Beauty & Services Booking Platform",
   "scripts": {
     "server": "npm run start --prefix server",
     "client": "npm run dev --prefix client",
@@ -9,6 +9,6 @@
     "build": "npm run build --prefix client"
   },
   "keywords": ["mern", "booking", "salon", "beauty", "express", "react", "recharts"],
-  "author": "Glamora Team",
+  "author": "Aurora Grace Team",
   "license": "ISC"
 }

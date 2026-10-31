@@ -264,7 +264,7 @@ const defaultSlots = [
 
 const seedCategoriesAndServices = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/glamora';
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auroragrace';
     console.log('🔄 Connecting to MongoDB for Category & Service seeding...');
     await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 10000 });
     console.log('✅ Connected to MongoDB.');

@@ -125,22 +125,33 @@ const getAnalytics = async (req, res) => {
  */
 const getCustomers = async (req, res) => {
   try {
+    // Disable HTTP cache to ensure instant reactivity for profile updates
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+
     const customers = await User.find({ role: 'customer' })
       .select('-password -otp -otpExpiry')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
     const customersWithHistory = await Promise.all(
       customers.map(async (customer) => {
         const bookings = await Booking.find({ userId: customer._id })
           .populate('serviceId', 'name price image duration')
-          .sort({ createdAt: -1 });
+          .sort({ createdAt: -1 })
+          .lean();
 
         const totalSpent = bookings
           .filter((b) => b.status === 'completed')
           .reduce((sum, b) => sum + (b.price || 0), 0);
 
         return {
-          ...customer.toObject(),
+          ...customer,
+          name: customer.name,
+          email: customer.email,
+          phone: customer.phone,
+          location: customer.location || '',
+          profilePicture: customer.profilePicture || customer.profilePic,
+          profilePic: customer.profilePic || customer.profilePicture,
           totalBookings: bookings.length,
           totalSpent,
           bookings

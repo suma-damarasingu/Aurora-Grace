@@ -8,8 +8,8 @@ const autoSeed = async () => {
   try {
     // 1. Admin
     const adminUser = await User.create({
-      name: 'Glamora Admin',
-      email: 'admin@glamora.com',
+      name: 'Aurora Grace Admin',
+      email: 'admin@auroragrace.com',
       phone: '+1 555-0199',
       password: 'AdminPassword123!',
       role: 'admin',
@@ -20,7 +20,7 @@ const autoSeed = async () => {
     // 2. Demo Customer
     const demoCustomer = await User.create({
       name: 'Sophia Miller',
-      email: 'customer@glamora.com',
+      email: 'customer@auroragrace.com',
       phone: '+1 555-0248',
       password: 'CustomerPassword123!',
       role: 'customer',

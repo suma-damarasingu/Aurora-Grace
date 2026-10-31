@@ -22,9 +22,10 @@ const LoginPage = () => {
 
   // Automatically redirect if already authenticated
   useEffect(() => {
-    const token = localStorage.getItem('glamora_token');
-    const storedUser = localStorage.getItem('glamora_user')
-      ? JSON.parse(localStorage.getItem('glamora_user'))
+    const token = localStorage.getItem('auroragrace_token') || localStorage.getItem('glamora_token');
+    const rawUser = localStorage.getItem('auroragrace_user') || localStorage.getItem('glamora_user');
+    const storedUser = rawUser
+      ? JSON.parse(rawUser)
       : null;
     const activeUser = user || storedUser;
 
@@ -104,7 +105,7 @@ const LoginPage = () => {
       const errorMsg =
         error.response?.data?.message ||
         (error.message === 'Network Error'
-          ? 'Network Error: Cannot connect to Glamora server. Please check your connection.'
+          ? 'Network Error: Cannot connect to Aurora Grace server. Please check your connection.'
           : 'Invalid email or password. Please verify your credentials.');
       toast.error(errorMsg);
     } finally {
@@ -218,14 +219,14 @@ const LoginPage = () => {
             {step === 1
               ? isAdminMode
                 ? 'Admin Login'
-                : 'Welcome Back to Glamora'
+                : 'Welcome Back to Aurora Grace'
               : '2-Step Verification'}
           </h2>
 
           <p className="text-xs text-slate-500 mt-1">
             {step === 1
               ? isAdminMode
-                ? 'Sign in with administrative credentials to manage Glamora salon operations.'
+                ? 'Sign in with administrative credentials to manage Aurora Grace salon operations.'
                 : 'Sign in to access your appointments & beauty dashboard.'
               : `Enter the 6-digit OTP code sent to ${email}`}
           </p>
@@ -252,7 +253,7 @@ const LoginPage = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={isAdminMode ? 'admin@glamora.com' : 'e.g. customer@glamora.com'}
+                  placeholder={isAdminMode ? 'admin@auroragrace.com' : 'e.g. customer@auroragrace.com'}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-rose-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
               </div>

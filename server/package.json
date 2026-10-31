@@ -1,7 +1,7 @@
 {
-  "name": "glamora-server",
+  "name": "auroragrace-server",
   "version": "1.0.0",
-  "description": "Glamora Beauty & Services Booking Platform - Backend API",
+  "description": "Aurora Grace Beauty & Services Booking Platform - Backend API",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

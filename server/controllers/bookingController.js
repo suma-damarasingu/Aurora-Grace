@@ -1,6 +1,7 @@
 const Booking = require('../models/Booking');
 const Service = require('../models/Service');
 const { FIXED_SLOTS } = require('./slotController');
+const { sendNotification, notifyAdmins } = require('./notificationController');
 
 /**
  * @route   POST /api/bookings
@@ -66,6 +67,20 @@ const createBooking = async (req, res) => {
       .populate('serviceId', 'name image duration price categoryId')
       .populate('userId', 'name email phone');
 
+    // Trigger Admin Notification
+    try {
+      const customerName = populatedBooking?.userId?.name || req.user?.name || 'Customer';
+      const serviceName = populatedBooking?.serviceId?.name || service.name || 'Service';
+      await notifyAdmins({
+        title: 'New Booking Request',
+        message: `New booking request from ${customerName} for ${serviceName}.`,
+        type: 'booking_created',
+        bookingId: booking._id
+      });
+    } catch (notifErr) {
+      console.error('Notification Error (createBooking):', notifErr);
+    }
+
     res.status(201).json({
       success: true,
       message: 'Booking placed successfully! Waiting for salon confirmation.',
@@ -126,6 +141,20 @@ const cancelBooking = async (req, res) => {
     }
 
     booking.status = 'cancelled';
+    // Trigger Admin Notification
+    try {
+      const populated = await Booking.findById(booking._id).populate('serviceId', 'name').populate('userId', 'name');
+      const customerName = populated?.userId?.name || req.user?.name || 'Customer';
+      const serviceName = populated?.serviceId?.name || 'Service';
+      await notifyAdmins({
+        title: 'Booking Cancelled',
+        message: `Booking for ${serviceName} was cancelled by ${customerName}.`,
+        type: 'booking_cancelled',
+        bookingId: booking._id
+      });
+    } catch (notifErr) {
+      console.error('Notification Error (cancelBooking):', notifErr);
+    }
     await booking.save();
 
     res.status(200).json({
@@ -222,6 +251,41 @@ const updateBookingStatus = async (req, res) => {
     const updated = await Booking.findById(booking._id)
       .populate('userId', 'name email phone')
       .populate('serviceId', 'name price image duration');
+
+    // Trigger Customer Notifications on status change
+    try {
+      const sName = updated?.serviceId?.name || 'Service';
+      if (status === 'accepted') {
+        await sendNotification({
+          recipientId: booking.userId,
+          role: 'customer',
+          title: 'Booking Confirmed',
+          message: `Your booking for ${sName} has been confirmed.`,
+          type: 'booking_accepted',
+          bookingId: booking._id
+        });
+      } else if (status === 'declined') {
+        await sendNotification({
+          recipientId: booking.userId,
+          role: 'customer',
+          title: 'Booking Declined',
+          message: `Your booking for ${sName} has been declined.`,
+          type: 'booking_declined',
+          bookingId: booking._id
+        });
+      } else if (status === 'completed') {
+        await sendNotification({
+          recipientId: booking.userId,
+          role: 'customer',
+          title: 'Appointment Completed',
+          message: `Your appointment for ${sName} is complete. Please leave a review!`,
+          type: 'booking_completed',
+          bookingId: booking._id
+        });
+      }
+    } catch (notifErr) {
+      console.error('Notification Error (updateBookingStatus):', notifErr);
+    }
 
     res.status(200).json({
       success: true,

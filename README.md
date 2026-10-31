@@ -1,6 +1,6 @@
-# 🌸 GLAMORA — Luxury Beauty & Services Booking Platform
+# 🌸 AURORA GRACE — Luxury Beauty & Services Booking Platform
 
-A full-stack **MERN (MongoDB, Express.js, React.js, Node.js)** web application engineered for modern beauty salons and spa centers. Glamora delivers a seamless experience across two dedicated portals: **Admin Control Center** and **Customer Studio**, equipped with two-step email authentication (OTP), intelligent slot conflict detection, and smart recommendations.
+A full-stack **MERN (MongoDB, Express.js, React.js, Node.js)** web application engineered for modern beauty salons and spa centers. Aurora Grace delivers a seamless experience across two dedicated portals: **Admin Control Center** and **Customer Studio**, equipped with two-step email authentication (OTP), intelligent slot conflict detection, and smart recommendations.
 
 ---
 
@@ -21,7 +21,7 @@ A full-stack **MERN (MongoDB, Express.js, React.js, Node.js)** web application e
 ## 📁 Project Structure
 
 ```text
-glamora/
+auroragrace/
 ├── client/                     # React Frontend (Vite)
 │   ├── public/                 # Static assets & icons
 │   ├── src/
@@ -140,10 +140,10 @@ PORT=5000
 NODE_ENV=development
 
 # MongoDB Atlas Connection String
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/glamora?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/auroragrace?retryWrites=true&w=majority
 
 # JWT Authentication
-JWT_SECRET=glamora_jwt_secret_key_production_ready_2026
+JWT_SECRET=auroragrace_jwt_secret_key_production_ready_2026
 JWT_EXPIRE=7d
 
 # Nodemailer OTP Settings (Gmail)
@@ -174,8 +174,8 @@ VITE_API_URL=http://localhost:5000/api
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/glamora.git
-cd glamora
+git clone https://github.com/your-username/auroragrace.git
+cd auroragrace
 
 # Install server dependencies
 cd server
@@ -197,11 +197,11 @@ npm run seed
 
 #### Seeded Credentials:
 - **Admin Account**:
-  - Email: `admin@glamora.com`
+  - Email: `admin@auroragrace.com`
   - Password: `AdminPassword123!`
   - Role: `admin`
 - **Customer Demo Account**:
-  - Email: `customer@glamora.com`
+  - Email: `customer@auroragrace.com`
   - Password: `CustomerPassword123!`
   - Role: `customer`
 

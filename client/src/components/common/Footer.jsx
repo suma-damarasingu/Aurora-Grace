@@ -13,7 +13,7 @@ const Footer = () => {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 text-white flex items-center justify-center shadow-lg shadow-rose-900/40">
                 <Sparkles className="w-5 h-5" />
               </div>
-              <span className="font-extrabold text-2xl tracking-tight text-white">GLAMORA</span>
+              <span className="font-extrabold text-2xl tracking-tight text-white">AURORA GRACE</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               Your premier luxury sanctuary for hair styling, bridal makeup, revitalizing skincare, custom nail art, and holistic wellness spa treatments.
@@ -89,18 +89,18 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-rose-400 shrink-0" />
-                <span>+1 (555) GLAMORA-24</span>
+                <span>+1 (555) AURORAGRACE-24</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-rose-400 shrink-0" />
-                <span>concierge@glamora.com</span>
+                <span>concierge@auroragrace.com</span>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} Glamora Beauty & Services Platform. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Aurora Grace Beauty & Services Platform. All rights reserved.</p>
         </div>
       </div>
     </footer>

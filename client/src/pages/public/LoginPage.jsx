@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
-import { Sparkles, Mail, Lock, KeyRound, ArrowRight, RefreshCw, ShieldCheck, UserCheck, Shield } from 'lucide-react';
+import { Sparkles, Mail, Lock, KeyRound, ArrowRight, RefreshCw, ShieldCheck, UserCheck, Shield, Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,28 +12,22 @@ const LoginPage = () => {
   const [step, setStep] = useState(1); // 1 = credentials, 2 = OTP verification
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [devOtpHint, setDevOtpHint] = useState('');
 
-  const { login, verifyLoginOtp, resendOtp, isAuthenticated, user } = useAuth();
+  const { login, verifyLoginOtp, resendOtp, isAuthenticated, isLoading, user } = useAuth();
   const navigate = useNavigate();
 
   // Automatically redirect if already authenticated
   useEffect(() => {
-    const token = localStorage.getItem('auroragrace_token') || localStorage.getItem('glamora_token');
-    const rawUser = localStorage.getItem('auroragrace_user') || localStorage.getItem('glamora_user');
-    const storedUser = rawUser
-      ? JSON.parse(rawUser)
-      : null;
-    const activeUser = user || storedUser;
-
-    if ((isAuthenticated || token) && activeUser) {
-      const target = activeUser.role === 'admin' ? '/admin/dashboard' : '/dashboard';
+    if (!isLoading && isAuthenticated && user) {
+      const target = user.role === 'admin' ? '/admin/dashboard' : '/dashboard';
       navigate(target, { replace: true });
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, isLoading, user, navigate]);
 
   // Keep mode in sync with URL search param if present
   useEffect(() => {
@@ -253,7 +247,7 @@ const LoginPage = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={isAdminMode ? 'admin@auroragrace.com' : 'e.g. customer@auroragrace.com'}
+                  placeholder={isAdminMode ? 'Enter your registered admin email' : 'e.g. customer@auroragrace.com'}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-rose-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
               </div>
@@ -274,13 +268,22 @@ const LoginPage = () => {
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-rose-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  className="w-full pl-10 pr-11 py-3 rounded-xl border border-rose-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPassword}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-rose-500 rounded"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 

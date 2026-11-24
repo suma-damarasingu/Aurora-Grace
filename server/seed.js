@@ -25,7 +25,6 @@ const seedDatabase = async () => {
         'MongoDB Atlas URI missing. Check server/.env'
       );
     }
-
     await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 15000
     });
@@ -33,23 +32,27 @@ const seedDatabase = async () => {
     console.log('Connected to MongoDB Atlas');
     console.log('Database:', mongoose.connection.name);
 
-    // Existing seeding code continues below...
-
-    // Clear existing collections
-    console.log('🧹 Clearing existing collections...');
-    await User.deleteMany();
-    await Category.deleteMany();
-    await Service.deleteMany();
-    await Booking.deleteMany();
-    await Favorite.deleteMany();
+    const [userCount, categoryCount, serviceCount, bookingCount, favoriteCount] = await Promise.all([
+      User.countDocuments(),
+      Category.countDocuments(),
+      Service.countDocuments(),
+      Booking.countDocuments(),
+      Favorite.countDocuments()
+    ]);
+    if (userCount || categoryCount || serviceCount || bookingCount || favoriteCount) {
+      throw new Error('Database already contains records. Nothing was changed. Use npm run seed:admin to safely check or initialize the admin account.');
+    }
+    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+      throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set in server/.env before seeding.');
+    }
 
     // 1. Seed ONE Admin user (as strictly specified: "only ONE admin exists (seeded in DB)")
     console.log('👤 Seeding Admin account...');
     const adminUser = await User.create({
       name: 'Aurora Grace Admin',
-      email: 'admin@auroragrace.com',
+      email: process.env.ADMIN_EMAIL.toLowerCase().trim(),
       phone: '+1 555-0199',
-      password: 'AdminPassword123!',
+      password: process.env.ADMIN_PASSWORD,
       role: 'admin',
       isVerified: true,
       profilePic: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80'
@@ -343,8 +346,7 @@ const seedDatabase = async () => {
     console.log('🎉 AURORA GRACE DATABASE SEEDING COMPLETED SUCCESSFULLY!');
     console.log('==================================================');
     console.log('👑 Admin Account:');
-    console.log('   Email:    admin@auroragrace.com');
-    console.log('   Password: AdminPassword123!');
+    console.log('   Admin credentials were loaded from server/.env.');
     console.log('   Role:     admin');
     console.log('--------------------------------------------------');
     console.log('👩 Customer Account:');

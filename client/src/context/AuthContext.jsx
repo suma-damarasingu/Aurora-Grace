@@ -5,12 +5,19 @@ import toast from 'react-hot-toast';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('auroragrace_user') || localStorage.getItem('glamora_user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('auroragrace_token') || localStorage.getItem('glamora_token'));
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      setUser(null);
+      setToken(null);
+    };
+
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+  }, []);
 
   // Check current session on mount (only on initial load)
   useEffect(() => {
@@ -22,6 +29,8 @@ export const AuthProvider = ({ children }) => {
           if (res.data.success && res.data.user) {
             setUser(res.data.user);
             localStorage.setItem('auroragrace_user', JSON.stringify(res.data.user));
+          } else {
+            setUser(null);
           }
         } catch (error) {
           console.error('Session restore failed:', error);
@@ -29,11 +38,9 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             setToken(null);
             localStorage.removeItem('auroragrace_token');
-            localStorage.removeItem('auroragrace_token');
-    localStorage.removeItem('glamora_token');
+            localStorage.removeItem('glamora_token');
             localStorage.removeItem('auroragrace_user');
-            localStorage.removeItem('auroragrace_user');
-    localStorage.removeItem('glamora_user');
+            localStorage.removeItem('glamora_user');
           }
         }
       }

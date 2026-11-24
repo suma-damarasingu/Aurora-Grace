@@ -18,99 +18,58 @@ const getArg = (name, fallback) => {
   return fallback;
 };
 
-const seedSingleAdmin = async () => {
+const initializeAdmin = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auroragrace';
-    console.log('🔄 Connecting to MongoDB for Single-Admin configuration...');
-    
+    console.log('Connecting to MongoDB to initialize the admin account...');
     await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 8000 });
-    console.log('✅ Connected to MongoDB successfully.');
 
-    // Desired Admin Credentials
-    const adminEmail = (getArg('email', process.env.ADMIN_EMAIL) || 'admin@auroragrace.com').toLowerCase().trim();
-    const adminPassword = getArg('password', process.env.ADMIN_PASSWORD) || 'AdminPassword123!';
+    const admins = await User.find({ role: 'admin' }).select('email').lean();
+    if (admins.length > 1) {
+      throw new Error(`Found ${admins.length} admin accounts. No records were changed; review them manually.`);
+    }
+
+    if (admins.length === 1) {
+      console.log(`Admin account already exists: ${admins[0].email}. No records were changed.`);
+      return;
+    }
+
+    const adminEmail = (getArg('email', process.env.ADMIN_EMAIL) || '').toLowerCase().trim();
+    const adminPassword = getArg('password', process.env.ADMIN_PASSWORD);
+    if (!adminEmail || !adminPassword) {
+      throw new Error('No admin account exists. Set ADMIN_EMAIL and ADMIN_PASSWORD in server/.env to initialize one.');
+    }
     const adminName = getArg('name', process.env.ADMIN_NAME) || 'Aurora Grace Admin';
     const adminPhone = getArg('phone', process.env.ADMIN_PHONE) || '+1 555-0199';
 
-    // 1. Check for existing admin in MongoDB
-    let admin = await User.findOne({ role: 'admin' });
-
-    if (admin) {
-      console.log(`ℹ️ Existing Admin record found (_id: ${admin._id}, current email: ${admin.email}).`);
-      console.log(`🔄 Updating existing Admin credentials...`);
-      admin.name = adminName;
-      admin.email = adminEmail;
-      admin.phone = adminPhone;
-      admin.password = adminPassword; // pre-save will re-hash with bcrypt
-      admin.isVerified = true;
-      admin.otp = null;
-      admin.otpExpiry = null;
-      await admin.save();
-      console.log(`✅ Single Admin account successfully updated.`);
-    } else {
-      // Check if user already exists with target email
-      const existingUser = await User.findOne({ email: adminEmail });
-      if (existingUser) {
-        console.log(`ℹ️ User found with email ${adminEmail}. Promoting account to Single Admin...`);
-        existingUser.name = adminName;
-        existingUser.phone = adminPhone;
-        existingUser.password = adminPassword;
-        existingUser.role = 'admin';
-        existingUser.isVerified = true;
-        existingUser.otp = null;
-        existingUser.otpExpiry = null;
-        await existingUser.save();
-        admin = existingUser;
-        console.log(`✅ Promoted account to Single Admin.`);
-      } else {
-        console.log(`🌱 Creating new Single Admin account (${adminEmail})...`);
-        admin = await User.create({
-          name: adminName,
-          email: adminEmail,
-          phone: adminPhone,
-          password: adminPassword,
-          role: 'admin',
-          isVerified: true
-        });
-        console.log(`✅ Single Admin account created successfully.`);
-      }
+    const existingUser = await User.findOne({ email: adminEmail });
+    if (existingUser) {
+      throw new Error(`An account already uses ${adminEmail} with role "${existingUser.role}". No records were changed.`);
     }
 
-    // 2. Enforce strict Single-Admin architecture (clean up any duplicate admin entries)
-    const duplicateAdmins = await User.deleteMany({
+    const admin = await User.create({
+      name: adminName,
+      email: adminEmail,
+      phone: adminPhone,
+      password: adminPassword,
       role: 'admin',
-      _id: { $ne: admin._id }
+      isVerified: true
     });
 
-    if (duplicateAdmins.deletedCount > 0) {
-      console.log(`🧹 Removed ${duplicateAdmins.deletedCount} redundant admin accounts to enforce single-admin architecture.`);
-    }
-
-    // 3. Verify password comparison with bcrypt
     const testAdmin = await User.findById(admin._id);
     const passMatches = await testAdmin.comparePassword(adminPassword);
     if (!passMatches) {
       throw new Error('Verification failed: Password comparison with bcrypt returned false.');
     }
 
-    console.log('\n======================================================');
-    console.log('👑 AURORA GRACE SINGLE ADMIN CONFIGURED SUCCESSFULLY');
-    console.log('======================================================');
-    console.log(`   Name:     ${testAdmin.name}`);
-    console.log(`   Email:    ${testAdmin.email}`);
-    console.log(`   Password: ${adminPassword}`);
-    console.log(`   Role:     ${testAdmin.role}`);
-    console.log(`   Verified: ${testAdmin.isVerified}`);
-    console.log(`   Bcrypt:   Verified (isMatch = true)`);
-    console.log('======================================================');
-    console.log('👉 You can now log into the Admin portal with these credentials.');
-    console.log('======================================================\n');
-
-    process.exit(0);
+    console.log(`Admin account initialized: ${testAdmin.email} (role: ${testAdmin.role}, verified: ${testAdmin.isVerified}).`);
+    console.log('Password hashing was verified; the password was not displayed.');
   } catch (error) {
-    console.error('❌ Failed to seed Single Admin:', error.message);
-    process.exit(1);
+    console.error('Failed to initialize admin:', error.message);
+    process.exitCode = 1;
+  } finally {
+    await mongoose.disconnect();
   }
 };
 
-seedSingleAdmin();
+initializeAdmin();

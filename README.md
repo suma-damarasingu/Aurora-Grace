@@ -188,24 +188,31 @@ npm install
 
 ### 2. Seed Database
 
-The seed script initializes the **single administrator account**, a demo customer, 5 beauty categories (Hair, Makeup, Skin, Nails, Spa), 15 services, and sample bookings for analytics:
+Initialize the admin account without changing existing database records:
 
 ```bash
 cd server
-npm run seed
+npm run seed:admin
 ```
 
-#### Seeded Credentials:
-- **Admin Account**:
-  - Email: `admin@auroragrace.com`
-  - Password: `AdminPassword123!`
-  - Role: `admin`
+If an admin already exists, this command reports its registered email and makes no changes. To initialize an admin only when none exists, set these in `server/.env` first:
+
+```env
+ADMIN_EMAIL=your-admin-email@example.com
+ADMIN_PASSWORD=use-a-unique-strong-password
+```
+
+Keep `server/.env` private and never commit real credentials. The initializer hashes the password using the existing User model hook, assigns role `admin`, and refuses to promote an existing customer or overwrite an existing admin.
+
+The full demo-data seed (`npm run seed`) is only for an empty database. It now stops without changing anything if records already exist.
+
+#### Demo Customer:
 - **Customer Demo Account**:
   - Email: `customer@auroragrace.com`
-  - Password: `CustomerPassword123!`
+  - Password: `CustomerPassword123!` ,`AdminPassword123!`
   - Role: `customer`
 
-*(Both demo accounts can also be autofilled with 1 click directly on the login page via the quick test buttons).*
+For this database, the existing verified admin email is `admin@glamora.com`; sign in with that registered email and the existing password. Do not use the customer account or an email shown only as a placeholder.
 
 ### 3. Start Backend & Frontend
 

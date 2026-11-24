@@ -191,22 +191,23 @@ const login = async (req, res) => {
       });
     }
 
+    if (role && !['admin', 'customer'].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid login role.'
+      });
+    }
+
     const normalizedEmail = email.toLowerCase().trim();
     console.log(`[Auth Login] Login attempt for: '${normalizedEmail}'${role ? ` [Role requested: ${role}]` : ''}`);
 
-    let user = await User.findOne({ email: normalizedEmail });
-    if (!user && (normalizedEmail === 'admin@auroragrace.com' || normalizedEmail === 'admin@glamora.com')) {
-      user = await User.findOne({ email: { $in: ['admin@auroragrace.com', 'admin@glamora.com'] } }) || await User.findOne({ role: 'admin' });
-    }
-    if (!user && (normalizedEmail === 'customer@auroragrace.com' || normalizedEmail === 'customer@glamora.com')) {
-      user = await User.findOne({ email: { $in: ['customer@auroragrace.com', 'customer@glamora.com'] } });
-    }
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
       console.warn(`[Auth Login] Failed: User not found with email '${normalizedEmail}'.`);
-      return res.status(401).json({
+      return res.status(404).json({
         success: false,
-        message: 'Invalid email or password.'
+        message: 'No account was found with this email address.'
       });
     }
 
@@ -215,7 +216,7 @@ const login = async (req, res) => {
       console.warn(`[Auth Login] Failed: Password mismatch for user '${normalizedEmail}'.`);
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password.'
+        message: 'Incorrect password.'
       });
     }
 
@@ -677,7 +678,13 @@ const changePassword = async (req, res) => {
 const setupAdmin = async (req, res) => {
   try {
     const { setupKey, name, email, password, phone } = req.body;
-    const masterKey = process.env.ADMIN_SETUP_KEY || 'glamora_master_setup_key_2026';
+    const masterKey = process.env.ADMIN_SETUP_KEY;
+    if (!masterKey) {
+      return res.status(503).json({
+        success: false,
+        message: 'Admin setup is not configured on this server.'
+      });
+    }
 
     const providedKey = setupKey || req.headers['x-admin-setup-key'];
     if (providedKey !== masterKey) {
@@ -687,12 +694,26 @@ const setupAdmin = async (req, res) => {
       });
     }
 
-    const adminEmail = (email || 'admin@glamora.com').toLowerCase().trim();
-    const adminPassword = password || 'AdminPassword123!';
+    const adminEmail = (email || process.env.ADMIN_EMAIL || '').toLowerCase().trim();
+    const adminPassword = password || process.env.ADMIN_PASSWORD;
+    if (!adminEmail || !adminPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Admin email and password must be supplied in the request or server environment.'
+      });
+    }
     const adminName = (name || 'Glamora Admin').trim();
     const adminPhone = (phone || '+1 555-0199').trim();
 
-    let admin = await User.findOne({ role: 'admin' });
+    const existingAdmins = await User.find({ role: 'admin' });
+    if (existingAdmins.length > 1) {
+      return res.status(409).json({
+        success: false,
+        message: 'Multiple admin accounts already exist. No records were changed; review them manually.'
+      });
+    }
+
+    let admin = existingAdmins[0] || null;
 
     if (admin) {
       admin.name = adminName;
@@ -729,9 +750,6 @@ const setupAdmin = async (req, res) => {
         console.log(`[Admin Setup] Single admin account created: ${admin.email}`);
       }
     }
-
-    // Guarantee that strictly one admin exists
-    await User.deleteMany({ role: 'admin', _id: { $ne: admin._id } });
 
     res.status(200).json({
       success: true,

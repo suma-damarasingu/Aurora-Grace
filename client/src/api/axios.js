@@ -35,6 +35,7 @@ api.interceptors.response.use(
         localStorage.removeItem('auroragrace_user');
         localStorage.removeItem('glamora_token');
         localStorage.removeItem('glamora_user');
+        window.dispatchEvent(new Event('auth:unauthorized'));
       }
     }
     return Promise.reject(error);
